@@ -14,13 +14,13 @@
 use std::collections::HashMap;
 
 fn fruit_basket() -> HashMap<String, u32> {
-    let basket: HashMap<_, _> = vec![
+    let basket = vec![
         (String::from("banana"), 2),
         (String::from("apple"), 4),
         (String::from("pear"), 3),
     ]
     .into_iter()
-    .collect();
+    .collect::<HashMap<_, _>>();
 
     basket
 }
