@@ -12,7 +12,22 @@ struct Color {
     blue: u8,
 }
 
-// I AM NOT DONE
+impl Color {
+    fn new(red: i16, green: i16, blue: i16) -> Color {
+        Color {
+            red: red as u8,
+            green: green as u8,
+            blue: blue as u8,
+        }
+    }
+
+    fn is_in_range(n: &i16) -> bool {
+        return match n {
+            0..=255 => true,
+            _ => false,
+        };
+    }
+}
 
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
@@ -26,19 +41,44 @@ struct Color {
 // Tuple implementation
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = Box<dyn error::Error>;
-    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {}
+    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let (r, g, b) = tuple;
+
+        if ![r, g, b].iter().all(Color::is_in_range) {
+            return Err("Bad color values")?;
+        }
+
+        Ok(Color::new(r, g, b))
+    }
 }
 
 // Array implementation
 impl TryFrom<[i16; 3]> for Color {
     type Error = Box<dyn error::Error>;
-    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {}
+    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        if !arr.iter().all(Color::is_in_range) {
+            return Err("Bad color values")?;
+        }
+
+        let [r, g, b] = arr;
+
+        Ok(Color::new(r, g, b))
+    }
 }
 
 // Slice implementation
 impl TryFrom<&[i16]> for Color {
     type Error = Box<dyn error::Error>;
-    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {}
+    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if !slice.iter().all(Color::is_in_range) {
+            return Err("Bad color values")?;
+        }
+
+        match slice {
+            [r, g, b] => Ok(Color::new(*r, *g, *b)),
+            _ => Err("Slice must have length of exactly 3")?,
+        }
+    }
 }
 
 fn main() {
